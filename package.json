@@ -1,0 +1,207 @@
+{
+  "name": "chat-archive",
+  "displayName": "Claude Chat Archive",
+  "description": "Browse and reopen any past Claude Code chat from a sidebar archive or quick-pick. Close idle chat tabs to free RAM.",
+  "version": "0.3.4",
+  "publisher": "andrewaltair",
+  "license": "MIT",
+  "author": "Andrew Altair <andr3waltair@gmail.com>",
+  "icon": "icon.png",
+  "galleryBanner": { "color": "#0d1117", "theme": "dark" },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "claude",
+    "claude code",
+    "chat",
+    "history",
+    "archive",
+    "sessions",
+    "sidebar",
+    "anthropic"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrewaltair/chat-archive.git"
+  },
+  "bugs": {
+    "url": "https://github.com/andrewaltair/chat-archive/issues"
+  },
+  "homepage": "https://github.com/andrewaltair/chat-archive#readme",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "chatArchive",
+          "title": "Chat Archive",
+          "icon": "media/archive.svg"
+        }
+      ]
+    },
+    "views": {
+      "chatArchive": [
+        {
+          "id": "chatArchiveView",
+          "name": "Chats"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "chatArchive.search",
+        "title": "Chat Archive: Search & Open a Chat",
+        "icon": "$(search)"
+      },
+      {
+        "command": "chatArchive.closeOthers",
+        "title": "Chat Archive: Close Idle Chat Tabs (free RAM)",
+        "icon": "$(close-all)"
+      },
+      {
+        "command": "chatArchive.refresh",
+        "title": "Chat Archive: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "chatArchive.open",
+        "title": "Chat Archive: Open Chat"
+      },
+      {
+        "command": "chatArchive.pin",
+        "title": "Pin chat",
+        "icon": "$(pin)"
+      },
+      {
+        "command": "chatArchive.unpin",
+        "title": "Unpin chat",
+        "icon": "$(pinned)"
+      },
+      {
+        "command": "chatArchive.style",
+        "title": "Set icon & color",
+        "icon": "$(paintcan)"
+      },
+      {
+        "command": "chatArchive.setColor",
+        "title": "Set color",
+        "icon": "$(symbol-color)"
+      },
+      {
+        "command": "chatArchive.setIcon",
+        "title": "Set icon",
+        "icon": "$(symbol-color)"
+      },
+      {
+        "command": "chatArchive.clearStyle",
+        "title": "Reset to default"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "chatArchive.search",
+          "when": "view == chatArchiveView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "chatArchive.closeOthers",
+          "when": "view == chatArchiveView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "chatArchive.refresh",
+          "when": "view == chatArchiveView",
+          "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "chatArchive.pin",
+          "when": "view == chatArchiveView && viewItem == chatUnpinned",
+          "group": "inline@1"
+        },
+        {
+          "command": "chatArchive.unpin",
+          "when": "view == chatArchiveView && viewItem == chatPinned",
+          "group": "inline@1"
+        },
+        {
+          "command": "chatArchive.style",
+          "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
+          "group": "inline@2"
+        },
+        {
+          "command": "chatArchive.setIcon",
+          "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
+          "group": "1_style@1"
+        },
+        {
+          "command": "chatArchive.setColor",
+          "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
+          "group": "1_style@2"
+        },
+        {
+          "command": "chatArchive.clearStyle",
+          "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
+          "group": "1_style@3"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "chatArchive.open",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.pin",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.unpin",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.style",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.setColor",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.setIcon",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.clearStyle",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Claude Chat Archive",
+      "properties": {
+        "chatArchive.claudeConfigDir": {
+          "type": "string",
+          "default": "",
+          "description": "Override the Claude config dir (default ~/.claude)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@vscode/vsce": "^3.9.2"
+  }
+}

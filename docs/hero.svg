@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" width="820" height="560" font-family="Segoe UI, sans-serif">
+  <defs><radialGradient id="bg" cx="0.5" cy="0.1" r="1.1"><stop offset="0" stop-color="#12161f"/><stop offset="1" stop-color="#0d1117"/></radialGradient></defs>
+  <rect width="820" height="560" rx="18" fill="url(#bg)"/>
+  <rect x="36" y="36" width="748" height="488" rx="14" fill="#181d26" stroke="#30363d"/>
+
+  <!-- title bar -->
+  <text x="60" y="74" font-family="Consolas, monospace" font-size="13" letter-spacing="3" fill="#8b949e">CHAT ARCHIVE</text>
+  <g fill="none" stroke="#6e7681" stroke-width="2">
+    <circle cx="710" cy="68" r="6"/><line x1="714" y1="72" x2="720" y2="78"/>
+    <path d="M738 62 h14 v14 h-14 z M742 66 h6 M742 72 h6"/>
+    <path d="M770 62 a8 8 0 1 0 7 5" stroke-linecap="round"/><path d="M778 60 l-1 7 7 -1" fill="#6e7681" stroke="none"/>
+  </g>
+
+  <!-- PINNED group -->
+  <g transform="translate(58,100)"><path d="M9 1 a6 6 0 0 1 6 6 c0 4 -6 10 -6 10 c0 0 -6 -6 -6 -10 a6 6 0 0 1 6 -6z" fill="#d29922"/></g>
+  <text x="84" y="115" font-size="14" letter-spacing="1.5" fill="#8b949e">PINNED</text>
+  <text x="752" y="115" font-size="12" fill="#6e7681" text-anchor="end">2</text>
+
+  <!-- pinned chat: star + green -->
+  <path transform="translate(74,134) scale(0.9)" d="M10 1 l2.6 5.3 5.8 .8 -4.2 4.1 1 5.8 -5.2 -2.7 -5.2 2.7 1 -5.8 -4.2 -4.1 5.8 -.8z" fill="#3fb950"/>
+  <text x="104" y="152" font-size="16" fill="#3fb950">bubabu_shop_mvp</text>
+  <text x="752" y="152" font-size="12" fill="#6e7681" text-anchor="end">Mon</text>
+  <!-- pinned chat: flame + red -->
+  <path transform="translate(76,170) scale(0.9)" d="M9 1 c3 4 6 5 6 9 a6 6 0 0 1 -12 0 c0 -2 1 -3 2 -4 a3.5 3.5 0 0 0 4 -5z" fill="#f85149"/>
+  <text x="104" y="190" font-size="16" fill="#f85149">mshenoveli_kitchen_v2</text>
+  <text x="752" y="190" font-size="12" fill="#6e7681" text-anchor="end">Sun</text>
+
+  <!-- AGENT repo group -->
+  <path transform="translate(60,212) scale(0.85)" d="M2 4 h7 l2 2 h11 a2 2 0 0 1 2 2 v9 a2 2 0 0 1 -2 2 H2 a2 2 0 0 1 -2 -2 V6 a2 2 0 0 1 2 -2z" fill="#8b949e"/>
+  <text x="84" y="227" font-size="14" fill="#c9d1d9">AGENT</text>
+  <text x="752" y="227" font-size="12" fill="#6e7681" text-anchor="end">291</text>
+
+  <!-- chat: comment + blue -->
+  <path transform="translate(76,244) scale(0.85)" d="M2 3 h16 a2 2 0 0 1 2 2 v8 a2 2 0 0 1 -2 2 H8 l-4 4 v-4 H2 a2 2 0 0 1 -2 -2 V5 a2 2 0 0 1 2 -2z" fill="#58a6ff"/>
+  <text x="104" y="263" font-size="16" fill="#58a6ff">Создать плагин VSCode для квоты</text>
+  <text x="752" y="263" font-size="12" fill="#6e7681" text-anchor="end">10:42</text>
+  <!-- chat: rocket + magenta -->
+  <path transform="translate(78,282) scale(0.8)" d="M11 1 c5 2 8 7 8 13 l-4 -2 -2 4 -4 0 -2 -4 -4 2 c0 -6 3 -11 8 -13z" fill="#bc8cff"/>
+  <text x="104" y="301" font-size="16" fill="#bc8cff">market prep</text>
+  <text x="752" y="301" font-size="12" fill="#6e7681" text-anchor="end">09:15</text>
+  <!-- chat: comment + default -->
+  <path transform="translate(76,320) scale(0.85)" d="M2 3 h16 a2 2 0 0 1 2 2 v8 a2 2 0 0 1 -2 2 H8 l-4 4 v-4 H2 a2 2 0 0 1 -2 -2 V5 a2 2 0 0 1 2 -2z" fill="#8b949e"/>
+  <text x="104" y="339" font-size="16" fill="#c9d1d9">knuckle_sandwich_skit_ge</text>
+  <text x="752" y="339" font-size="12" fill="#6e7681" text-anchor="end">Sun</text>
+
+  <!-- second repo -->
+  <path transform="translate(60,360) scale(0.85)" d="M2 4 h7 l2 2 h11 a2 2 0 0 1 2 2 v9 a2 2 0 0 1 -2 2 H2 a2 2 0 0 1 -2 -2 V6 a2 2 0 0 1 2 -2z" fill="#8b949e"/>
+  <text x="84" y="375" font-size="14" fill="#c9d1d9">DIET_SPORT_AGENT</text>
+  <text x="752" y="375" font-size="12" fill="#6e7681" text-anchor="end">12</text>
+  <!-- chat: comment + cyan -->
+  <path transform="translate(76,392) scale(0.85)" d="M2 3 h16 a2 2 0 0 1 2 2 v8 a2 2 0 0 1 -2 2 H8 l-4 4 v-4 H2 a2 2 0 0 1 -2 -2 V5 a2 2 0 0 1 2 -2z" fill="#39c5cf"/>
+  <text x="104" y="411" font-size="16" fill="#39c5cf">diet plan v3</text>
+  <text x="752" y="411" font-size="12" fill="#6e7681" text-anchor="end">Sat</text>
+
+  <text x="410" y="494" font-size="13" fill="#6e7681" text-anchor="middle">Pin, color and icon your chats — reopen any of 300+ from the sidebar, close idle tabs to free RAM</text>
+</svg>

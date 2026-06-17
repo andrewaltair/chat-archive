@@ -1,0 +1,24 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax check
+        run: node --check extension.js && node --check archive.js
+      - name: Install vsce
+        run: npm i -D @vscode/vsce
+      - name: Package
+        run: npx vsce package --allow-missing-repository -o chat-archive.vsix
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chat-archive-vsix
+          path: chat-archive.vsix
