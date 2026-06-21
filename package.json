@@ -1,8 +1,8 @@
 {
   "name": "chat-archive",
   "displayName": "Claude Chat Archive",
-  "description": "Browse, rename, pin and reopen any past Claude Code chat from a sidebar archive or quick-pick. Close idle chat tabs to free RAM.",
-  "version": "0.4.0",
+  "description": "Browse, rename, pin, reorder and reopen any past Claude Code chat from a sidebar archive or quick-pick. Close idle chat tabs to free RAM.",
+  "version": "0.5.0",
   "publisher": "andrewaltair",
   "license": "MIT",
   "author": "Andrew Altair <andr3waltair@gmail.com>",
@@ -79,6 +79,16 @@
         "command": "chatArchive.rename",
         "title": "Rename chat",
         "icon": "$(edit)"
+      },
+      {
+        "command": "chatArchive.moveTop",
+        "title": "Move to top",
+        "icon": "$(arrow-up)"
+      },
+      {
+        "command": "chatArchive.move",
+        "title": "Move to position...",
+        "icon": "$(list-ordered)"
       },
       {
         "command": "chatArchive.pin",
@@ -168,6 +178,16 @@
           "command": "chatArchive.clearStyle",
           "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
           "group": "1_style@3"
+        },
+        {
+          "command": "chatArchive.moveTop",
+          "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
+          "group": "2_move@1"
+        },
+        {
+          "command": "chatArchive.move",
+          "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
+          "group": "2_move@2"
         }
       ],
       "commandPalette": [
@@ -177,6 +197,14 @@
         },
         {
           "command": "chatArchive.rename",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.moveTop",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.move",
           "when": "false"
         },
         {

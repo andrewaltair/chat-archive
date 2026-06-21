@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.0] — 2026-06-22
+
+### Added
+- **Reorder pinned chats** — drag a chat to move it, or right-click, "Move to top" / "Move to position..." to drop it at an exact spot (first, fifth, anything). The order is saved. Dragging an unpinned chat into the list pins it at that position. Unordered pinned chats fall to the bottom by recency.
+
 ## [0.4.0] — 2026-06-22
 
 ### Added

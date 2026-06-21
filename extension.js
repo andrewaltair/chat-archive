@@ -10,6 +10,33 @@ function configDir() { return vscode.workspace.getConfiguration('chatArchive').g
 function pinnedSet() { return new Set(gstate ? (gstate.get('chatArchive.pinned', []) || []) : []); }
 function savePinned(set) { if (gstate) gstate.update('chatArchive.pinned', [...set]); }
 
+// ---- manual order of the Pinned group (persisted) ----
+function orderList() { return gstate ? (gstate.get('chatArchive.order', []) || []) : []; }
+function saveOrder(ids) { if (gstate) gstate.update('chatArchive.order', ids); }
+// pinned chats sorted by the saved manual order; unordered ones fall to the end by recency
+function sortedPinned(chats) {
+  const p = pinnedSet(); const order = orderList();
+  return chats.filter((c) => p.has(c.sessionId)).sort((a, b) => {
+    const ia = order.indexOf(a.sessionId), ib = order.indexOf(b.sessionId);
+    if (ia < 0 && ib < 0) return b.mtime - a.mtime;
+    if (ia < 0) return 1; if (ib < 0) return -1; return ia - ib;
+  });
+}
+// move/insert a set of chats into the pinned order (auto-pins them); idx 0 = top, undefined = end
+function placeInOrder(draggedIds, anchorId, atTop) {
+  const chats = listChats(configDir());
+  const p = pinnedSet(); draggedIds.forEach((id) => p.add(id)); savePinned(p);
+  let ids = sortedPinned(chats).map((c) => c.sessionId);
+  const drag = draggedIds.filter((id) => ids.includes(id));
+  ids = ids.filter((id) => !drag.includes(id));
+  let idx;
+  if (atTop) idx = 0;
+  else if (anchorId) { const ti = ids.indexOf(anchorId); idx = ti < 0 ? ids.length : ti; }
+  else idx = ids.length;
+  ids.splice(Math.max(0, Math.min(idx, ids.length)), 0, ...drag);
+  saveOrder(ids); provider.refresh();
+}
+
 // ---- per-chat custom name (display-only override; never edits Claude's transcript) ----
 function allTitles() { return gstate ? (gstate.get('chatArchive.titles', {}) || {}) : {}; }
 function saveTitles(o) { if (gstate) gstate.update('chatArchive.titles', o); }
@@ -98,7 +125,7 @@ class ChatTree {
     if (this.chats === null) this.chats = listChats(configDir());
     if (!el) {
       const pin = pinnedSet();
-      const pinned = this.chats.filter((c) => pin.has(c.sessionId));
+      const pinned = sortedPinned(this.chats);
       const rest = this.chats.filter((c) => !pin.has(c.sessionId));
       const nodes = [];
       if (pinned.length) {
@@ -167,11 +194,46 @@ async function closeOthers() {
   vscode.window.showInformationMessage('Closed ' + toClose.length + ' chat tab(s) — RAM freed. Reopen from the archive anytime.');
 }
 
+// ---- drag to reorder + explicit "move to position" (Pinned group) ----
+const DND_MIME = 'application/vnd.code.tree.chatarchiveview';
+class ChatDnD {
+  constructor() { this.dropMimeTypes = [DND_MIME]; this.dragMimeTypes = [DND_MIME]; }
+  handleDrag(source, dt) {
+    const ids = (source || []).filter((n) => n && n.sessionId).map((n) => n.sessionId);
+    if (ids.length) dt.set(DND_MIME, new vscode.DataTransferItem(JSON.stringify(ids)));
+  }
+  async handleDrop(target, dt) {
+    const it = dt.get(DND_MIME); if (!it) return;
+    let ids; try { ids = JSON.parse(await it.asString()); } catch (_e) { return; }
+    if (Array.isArray(ids) && ids.length) placeInOrder(ids, target && target.sessionId, false);
+  }
+}
+
+function moveTop(node) { const s = node && node.sessionId; if (!s) return; placeInOrder([s], null, true); }
+async function moveTo(node) {
+  const s = node && node.sessionId; if (!s) return;
+  const full = sortedPinned(listChats(configDir())).map((c) => c.sessionId);
+  const cur = full.includes(s) ? full.indexOf(s) + 1 : full.length + 1;
+  const ids = full.filter((id) => id !== s);
+  const max = ids.length + 1;
+  const ans = await vscode.window.showInputBox({
+    title: 'Move chat to position', value: String(cur),
+    prompt: '1 = top, up to ' + max,
+    validateInput: (v) => { const n = Number(v); return (Number.isInteger(n) && n >= 1 && n <= max) ? undefined : ('enter 1 to ' + max); },
+  });
+  if (ans === undefined) return;
+  const n = Number(ans) - 1;
+  if (n <= 0) placeInOrder([s], null, true);
+  else if (n >= ids.length) placeInOrder([s], null, false);
+  else placeInOrder([s], ids[n], false);
+}
+
 function activate(context) {
   gstate = context.globalState;
   provider = new ChatTree();
+  const view = vscode.window.createTreeView('chatArchiveView', { treeDataProvider: provider, canSelectMany: true, dragAndDropController: new ChatDnD() });
   context.subscriptions.push(
-    vscode.window.registerTreeDataProvider('chatArchiveView', provider),
+    view,
     vscode.commands.registerCommand('chatArchive.open', openChat),
     vscode.commands.registerCommand('chatArchive.search', searchChats),
     vscode.commands.registerCommand('chatArchive.closeOthers', closeOthers),
@@ -179,6 +241,8 @@ function activate(context) {
     vscode.commands.registerCommand('chatArchive.pin', pin),
     vscode.commands.registerCommand('chatArchive.unpin', unpin),
     vscode.commands.registerCommand('chatArchive.rename', renameChat),
+    vscode.commands.registerCommand('chatArchive.moveTop', moveTop),
+    vscode.commands.registerCommand('chatArchive.move', moveTo),
     vscode.commands.registerCommand('chatArchive.setIcon', setIcon),
     vscode.commands.registerCommand('chatArchive.setColor', setColor),
     vscode.commands.registerCommand('chatArchive.clearStyle', clearStyle),
