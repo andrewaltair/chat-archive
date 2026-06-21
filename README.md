@@ -22,6 +22,7 @@ Claude Code already saves every chat as a transcript in `~/.claude/projects`. Th
 
 - 🗂 **Sidebar archive** — every chat, grouped by repo, newest first, labeled by its title. Click to open.
 - 🔁 **Reopen anything** — opens the exact chat by session id (via Claude's own deep link), even one closed long ago.
+- ✏️ **Rename** any chat to a custom name (local override, never edits Claude's transcript; original stays in the tooltip).
 - 📌 **Pin** favourites to a group on top (persists across reloads).
 - 🎨 **Color & icon** each chat — one click sets a custom icon and a color so you can tell them apart at a glance.
 - 🔍 **Quick-pick search** — `Search & Open a Chat`, type by title or repo.
@@ -34,7 +35,7 @@ Pure local: reads `~/.claude/projects/**/*.jsonl` (cached by mtime) for titles, 
 ## Use
 
 - Open the **Chat Archive** view in the activity bar (left).
-- Hover a chat: **📌 pin** · **🎨 set icon & color**. Right-click for `Set icon` / `Set color` / `Reset to default`.
+- Hover a chat: **✏️ rename** · **📌 pin** · **🎨 set icon & color**. Right-click for `Rename chat` / `Set icon` / `Set color` / `Reset to default`.
 - Toolbar (view title): **🔍 search** · **✖ close idle tabs** · **⟳ refresh**.
 
 ## Settings

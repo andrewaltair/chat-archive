@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.0] — 2026-06-22
+
+### Added
+- **Rename a chat** — give any chat a custom name (inline pencil, or right-click, Rename chat). Display-only override stored locally; it never edits Claude's transcript, and the original title shows in the tooltip. Leave the box empty to restore the original.
+
 ## [0.3.4] — 2026-06-16
 
 First public release.

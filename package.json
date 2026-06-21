@@ -1,8 +1,8 @@
 {
   "name": "chat-archive",
   "displayName": "Claude Chat Archive",
-  "description": "Browse and reopen any past Claude Code chat from a sidebar archive or quick-pick. Close idle chat tabs to free RAM.",
-  "version": "0.3.4",
+  "description": "Browse, rename, pin and reopen any past Claude Code chat from a sidebar archive or quick-pick. Close idle chat tabs to free RAM.",
+  "version": "0.4.0",
   "publisher": "andrewaltair",
   "license": "MIT",
   "author": "Andrew Altair <andr3waltair@gmail.com>",
@@ -76,6 +76,11 @@
         "title": "Chat Archive: Open Chat"
       },
       {
+        "command": "chatArchive.rename",
+        "title": "Rename chat",
+        "icon": "$(edit)"
+      },
+      {
         "command": "chatArchive.pin",
         "title": "Pin chat",
         "icon": "$(pin)"
@@ -125,19 +130,29 @@
       ],
       "view/item/context": [
         {
+          "command": "chatArchive.rename",
+          "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
+          "group": "inline@1"
+        },
+        {
           "command": "chatArchive.pin",
           "when": "view == chatArchiveView && viewItem == chatUnpinned",
-          "group": "inline@1"
+          "group": "inline@2"
         },
         {
           "command": "chatArchive.unpin",
           "when": "view == chatArchiveView && viewItem == chatPinned",
-          "group": "inline@1"
+          "group": "inline@2"
         },
         {
           "command": "chatArchive.style",
           "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
-          "group": "inline@2"
+          "group": "inline@3"
+        },
+        {
+          "command": "chatArchive.rename",
+          "when": "view == chatArchiveView && (viewItem == chatPinned || viewItem == chatUnpinned)",
+          "group": "0_name@1"
         },
         {
           "command": "chatArchive.setIcon",
@@ -158,6 +173,10 @@
       "commandPalette": [
         {
           "command": "chatArchive.open",
+          "when": "false"
+        },
+        {
+          "command": "chatArchive.rename",
           "when": "false"
         },
         {

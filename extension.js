@@ -10,6 +10,24 @@ function configDir() { return vscode.workspace.getConfiguration('chatArchive').g
 function pinnedSet() { return new Set(gstate ? (gstate.get('chatArchive.pinned', []) || []) : []); }
 function savePinned(set) { if (gstate) gstate.update('chatArchive.pinned', [...set]); }
 
+// ---- per-chat custom name (display-only override; never edits Claude's transcript) ----
+function allTitles() { return gstate ? (gstate.get('chatArchive.titles', {}) || {}) : {}; }
+function saveTitles(o) { if (gstate) gstate.update('chatArchive.titles', o); }
+function titleFor(s, fallback) { const t = allTitles()[s]; return (t && t.trim()) ? t : fallback; }
+async function renameChat(node) {
+  const s = node && node.sessionId; if (!s) return;
+  const cur = allTitles()[s] || node.title || '';
+  const v = await vscode.window.showInputBox({
+    title: 'Rename chat', value: cur, valueSelection: [0, cur.length],
+    prompt: 'Custom name shown in the archive (leave empty to restore the original).',
+  });
+  if (v === undefined) return; // cancelled
+  const all = allTitles();
+  if (v.trim()) all[s] = v.trim(); else delete all[s];
+  saveTitles(all);
+  provider.refresh();
+}
+
 function fmtDate(ms) {
   const d = new Date(ms);
   const now = new Date();
@@ -105,14 +123,16 @@ class ChatTree {
 }
 
 function chatNode(c, isPinned) {
-  const it = new vscode.TreeItem(c.title || '(untitled)', vscode.TreeItemCollapsibleState.None);
+  const shown = titleFor(c.sessionId, c.title || '(untitled)');
+  const renamed = shown !== (c.title || '(untitled)');
+  const it = new vscode.TreeItem(shown, vscode.TreeItemCollapsibleState.None);
   it.description = fmtDate(c.mtime);
-  it.tooltip = (c.title || '') + '\n' + c.cwd + '\n' + new Date(c.mtime).toLocaleString();
+  it.tooltip = shown + (renamed ? '\n(original: ' + (c.title || 'untitled') + ')' : '') + '\n' + c.cwd + '\n' + new Date(c.mtime).toLocaleString();
   const st = styleFor(c.sessionId);
   it.iconPath = new vscode.ThemeIcon(st.icon || 'comment-discussion', st.color ? new vscode.ThemeColor(st.color) : undefined);
   it.command = { command: 'chatArchive.open', title: 'Open chat', arguments: [c.sessionId] };
   it.contextValue = isPinned ? 'chatPinned' : 'chatUnpinned';
-  return { item: it, sessionId: c.sessionId };
+  return { item: it, sessionId: c.sessionId, title: c.title || '' };
 }
 
 // ---- quick-pick search (pinned first) ----
@@ -122,7 +142,7 @@ async function searchChats() {
   const pin = pinnedSet();
   const ordered = [...chats.filter((c) => pin.has(c.sessionId)), ...chats.filter((c) => !pin.has(c.sessionId))];
   const pick = await vscode.window.showQuickPick(
-    ordered.map((c) => ({ label: (pin.has(c.sessionId) ? '$(pinned) ' : '$(comment-discussion) ') + (c.title || '(untitled)'), description: c.repo, detail: fmtDate(c.mtime), s: c.sessionId })),
+    ordered.map((c) => ({ label: (pin.has(c.sessionId) ? '$(pinned) ' : '$(comment-discussion) ') + titleFor(c.sessionId, c.title || '(untitled)'), description: c.repo, detail: fmtDate(c.mtime), s: c.sessionId })),
     { title: 'Open a chat from the archive', matchOnDescription: true, matchOnDetail: true, placeHolder: 'search by title / repo' }
   );
   if (pick) openChat(pick.s);
@@ -158,6 +178,7 @@ function activate(context) {
     vscode.commands.registerCommand('chatArchive.refresh', () => provider.refresh()),
     vscode.commands.registerCommand('chatArchive.pin', pin),
     vscode.commands.registerCommand('chatArchive.unpin', unpin),
+    vscode.commands.registerCommand('chatArchive.rename', renameChat),
     vscode.commands.registerCommand('chatArchive.setIcon', setIcon),
     vscode.commands.registerCommand('chatArchive.setColor', setColor),
     vscode.commands.registerCommand('chatArchive.clearStyle', clearStyle),
